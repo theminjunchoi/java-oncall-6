@@ -2,6 +2,7 @@ package oncall.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import oncall.domain.Work;
 import oncall.domain.Worker;
 import oncall.service.ScheduleManager;
 import oncall.view.InputView;
@@ -24,7 +25,8 @@ public class OncallController {
        List<Worker> weekDayWorkerSequence = workerSequence.get(0);
        List<Worker> restDayWorkerSequence = workerSequence.get(1);
        scheduleManager.organize(monthAndStartDay, weekDayWorkerSequence, restDayWorkerSequence);
-
+       List<Work> workSchedule = scheduleManager.makeSchedule();
+       outputView.printSchedule(workSchedule);
     }
 
     private List<String> getStartInfo() {
@@ -39,8 +41,8 @@ public class OncallController {
     private List<List<Worker>> getWorkInfo() {
         List<List<Worker>> workerSequence = new ArrayList<>();
         try {
-            workerSequence.set(0, inputView.getWeekDayWorkerSequence());
-            workerSequence.set(1, inputView.getWeekDayWorkerSequence());
+            workerSequence.add(inputView.getWeekDayWorkerSequence());
+            workerSequence.add(inputView.getRestDayWorkerSequence());
             return workerSequence;
         } catch (IllegalArgumentException e) {
             outputView.printErrorMessage(e);
