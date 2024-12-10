@@ -5,8 +5,8 @@ import oncall.domain.DayCategory;
 import oncall.domain.Work;
 
 public class OutputView {
-    private static final String WORK_FORMAT = "%d월 %d일 %s %s\n";
-    private static final String WORK_HOLIDAY_FORMAT = "%d월 %d일 %s(휴일) %s\n";
+    private static final String WORK_FORMAT = "%d월 %d일 %s %s" + System.lineSeparator();
+    private static final String WORK_HOLIDAY_FORMAT = "%d월 %d일 %s(휴일) %s" + System.lineSeparator();
 
 
     public void printErrorMessage(Exception e) {

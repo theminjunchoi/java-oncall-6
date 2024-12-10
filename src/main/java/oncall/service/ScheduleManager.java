@@ -28,11 +28,11 @@ public class ScheduleManager {
     public List<Work> makeSchedule() {
         addHoliday();
         List<Work> workSchedule = new ArrayList<>();
-
         organizeWorkInfo(workSchedule); // month, date, day 지정
         enrollHoliday(workSchedule); // 해당 월 공휴일 지정
         makeWeekDaySchedule(workSchedule); // 평일 근무 지정
         makeRestDaySchedule(workSchedule); // 휴일 근무 지정
+        validateSchedule(workSchedule);
         return workSchedule;
     }
 
@@ -88,5 +88,28 @@ public class ScheduleManager {
         holiday.addHoliday(10,3);
         holiday.addHoliday(10,9);
         holiday.addHoliday(12,25);
+    }
+
+    public void validateSchedule(List<Work> workSchedule) {
+        for (int i = 0; i < workSchedule.size()-1; i++) {
+            if (workSchedule.get(i).getWorker().getName().equals(workSchedule.get(i+1).getWorker().getName())) {
+                changeSchedule(workSchedule, i);
+            }
+        }
+    }
+
+    private void changeSchedule(List<Work> workSchedule, int index) {
+        Worker todayWorker = workSchedule.get(index+1).getWorker();
+        boolean isWorkDay = workSchedule.get(index+1).isWorkDay();
+        int nextDayIndex = index;
+        for (int i = index+2; i < workSchedule.size(); i++) {
+            if (isWorkDay == workSchedule.get(i).isWorkDay()) {
+                nextDayIndex = i;
+                break;
+            }
+        }
+        Worker nextDayWorker = workSchedule.get(nextDayIndex).getWorker();
+        workSchedule.get(index+1).setWorker(nextDayWorker);
+        workSchedule.get(nextDayIndex).setWorker(todayWorker);
     }
 }
