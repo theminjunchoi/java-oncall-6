@@ -33,9 +33,9 @@ public class InputView {
     private static List<Worker> getWorkers() {
         String workerSequenceInput = Console.readLine();
         Validator.validateWorkerSequence(workerSequenceInput);
-        List<String> workerSequence = List.of(workerSequenceInput.replace(" ", "").split(","));
+        List<String> weekDayWorkerSequence = List.of(workerSequenceInput.replace(" ", "").split(","));
         List<Worker> workers = new ArrayList<>();
-        for (String workerName : workerSequence) {
+        for (String workerName : weekDayWorkerSequence) {
             workers.add(new Worker(workerName));
         }
         return workers;
