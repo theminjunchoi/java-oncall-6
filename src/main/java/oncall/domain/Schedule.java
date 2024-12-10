@@ -3,13 +3,15 @@ package oncall.domain;
 public class Schedule {
     private final int month;
     private final int date;
+    private final String day;
     private final Worker worker;
-    private final Day day;
+    private final DayCategory dayCategory;
 
-    public Schedule(int month, int date, Worker worker, Day day) {
+    public Schedule(int month, int date, String day, Worker worker, DayCategory dayCategory) {
         this.month = month;
         this.date = date;
-        this.worker = worker;
         this.day = day;
+        this.worker = worker;
+        this.dayCategory = dayCategory;
     }
 }
