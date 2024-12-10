@@ -72,6 +72,24 @@ class ApplicationTest extends NsTest {
         });
     }
 
+    @Test
+    void 근무자가_연속되는_예외_테스트() {
+        assertSimpleTest(() -> {
+            run("5,월",
+                    "준팍,도밥,고니,수아,루루,글로,솔로스타,우코,슬링키,참새,도리",
+                    "수아,루루,글로,솔로스타,우코,슬링키,참새,도리,준팍,도밥,고니"
+            );
+            assertThat(output()).contains(
+                    "5월 1일 월 준팍" + LINE_SEPARATOR,
+                    "5월 2일 화 도밥" + LINE_SEPARATOR,
+                    "5월 3일 수 고니" + LINE_SEPARATOR,
+                    "5월 4일 목 수아" + LINE_SEPARATOR,
+                    "5월 5일 금(휴일) 루루" + LINE_SEPARATOR,
+                    "5월 6일 토 수아" + LINE_SEPARATOR
+            );
+        });
+    }
+
     @Override
     protected void runMain() {
         Application.main(new String[]{});
