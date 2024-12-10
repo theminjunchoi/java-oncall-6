@@ -27,17 +27,25 @@ public class ScheduleManager {
 
     public List<Work> makeSchedule() {
         addHoliday();
-
         List<Work> workSchedule = new ArrayList<>();
 
+        organizeWorkInfo(workSchedule); // month, date, day 지정
+        enrollHoliday(workSchedule); // 해당 월 공휴일 지정
+        makeWeekDaySchedule(workSchedule); // 평일 근무 지정
+        makeRestDaySchedule(workSchedule); // 휴일 근무 지정
+        return workSchedule;
+    }
+
+    private void organizeWorkInfo(List<Work> workSchedule) {
         int monthSize = MONTH_SIZE_INFO.get(month);
         int startDayIndex = WEEK.indexOf(startDay);
         for (int i = 1; i <= monthSize; i++) {
             workSchedule.add(new Work(month, i, WEEK.get(startDayIndex)));
             startDayIndex = (startDayIndex + 1) % 7;
         }
+    }
 
-        // 해당 월 공휴일 지정
+    private void enrollHoliday(List<Work> workSchedule) {
         List<Integer> holidays = holiday.getCalendar().get(month);
         for (Integer holiday : holidays) {
             DayCategory dayCategory = workSchedule.get(holiday-1).getDayCategory();
@@ -47,8 +55,28 @@ public class ScheduleManager {
                 workSchedule.get(holiday-1).setDayCategory(DayCategory.WEEKEND_AND_HOLIDAY);
             }
         }
+    }
 
-        return workSchedule;
+    private void makeWeekDaySchedule(List<Work> workSchedule) {
+        int weekDayWorkerIndex = 0;
+        int weekDayWorkerSize = weekDayWorkerSequence.size();
+        for (Work work : workSchedule) {
+            if (work.isWorkDay()) {
+                work.setWorker(weekDayWorkerSequence.get(weekDayWorkerIndex));
+                weekDayWorkerIndex = (weekDayWorkerIndex + 1) % weekDayWorkerSize;
+            }
+        }
+    }
+
+    private void makeRestDaySchedule(List<Work> workSchedule) {
+        int restDayWorkerIndex = 0;
+        int restDayWorkerSize = restDayWorkerSequence.size();
+        for (Work work : workSchedule) {
+            if (!work.isWorkDay()) {
+                work.setWorker(restDayWorkerSequence.get(restDayWorkerIndex));
+                restDayWorkerIndex = (restDayWorkerIndex + 1) % restDayWorkerSize;
+            }
+        }
     }
 
     public void addHoliday() {

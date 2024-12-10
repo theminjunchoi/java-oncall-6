@@ -6,4 +6,8 @@ public class Worker {
     public Worker(String workerName) {
         this.workerName = workerName;
     }
+
+    public String getName() {
+        return workerName;
+    }
 }

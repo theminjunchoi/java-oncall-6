@@ -29,12 +29,20 @@ public class Work {
         }
     }
 
+    public boolean isWorkDay() {
+        return dayCategory == DayCategory.WEEKDAY;
+    }
+
     public DayCategory getDayCategory() {
         return dayCategory;
     }
 
     public void setDayCategory(DayCategory dayCategory){
         this.dayCategory = dayCategory;
+    }
+
+    public void setWorker(Worker worker) {
+        this.worker = worker;
     }
 
     public int getMonth() {
@@ -47,5 +55,9 @@ public class Work {
 
     public String getDay() {
         return day;
+    }
+
+    public Worker getWorker() {
+        return worker;
     }
 }
