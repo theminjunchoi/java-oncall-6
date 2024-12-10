@@ -3,6 +3,7 @@ package oncall.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import oncall.domain.DayCategory;
 import oncall.domain.Work;
 import oncall.domain.Worker;
 
@@ -15,6 +16,7 @@ public class ScheduleManager {
     private String startDay;
     private List<Worker> weekDayWorkerSequence;
     private List<Worker> restDayWorkerSequence;
+    private Holiday holiday = new Holiday();
 
     public void organize(List<String> monthAndStartDay, List<Worker> weekDayWorkerSequence, List<Worker> restDayWorkerSequence) {
         this.month = Integer.parseInt(monthAndStartDay.get(0));
@@ -24,13 +26,39 @@ public class ScheduleManager {
     }
 
     public List<Work> makeSchedule() {
+        addHoliday();
+
         List<Work> workSchedule = new ArrayList<>();
+
         int monthSize = MONTH_SIZE_INFO.get(month);
         int startDayIndex = WEEK.indexOf(startDay);
         for (int i = 1; i <= monthSize; i++) {
             workSchedule.add(new Work(month, i, WEEK.get(startDayIndex)));
             startDayIndex = (startDayIndex + 1) % 7;
         }
+
+        // 해당 월 공휴일 지정
+        List<Integer> holidays = holiday.getCalendar().get(month);
+        for (Integer holiday : holidays) {
+            DayCategory dayCategory = workSchedule.get(holiday-1).getDayCategory();
+            if (dayCategory == DayCategory.WEEKDAY) {
+                workSchedule.get(holiday-1).setDayCategory(DayCategory.WEEKDAY_BUT_HOLIDAY);
+            } else if (dayCategory == DayCategory.WEEKEND) {
+                workSchedule.get(holiday-1).setDayCategory(DayCategory.WEEKEND_AND_HOLIDAY);
+            }
+        }
+
         return workSchedule;
+    }
+
+    public void addHoliday() {
+        holiday.addHoliday(1,1);
+        holiday.addHoliday(3,1);
+        holiday.addHoliday(5,5);
+        holiday.addHoliday(6,6);
+        holiday.addHoliday(8,15);
+        holiday.addHoliday(10,3);
+        holiday.addHoliday(10,9);
+        holiday.addHoliday(12,25);
     }
 }
